@@ -26,7 +26,7 @@ import java.util.stream.Collector;
 
 public class CalculateAverage_baseline {
 
-    private static final String FILE = "./measurements.txt";
+    private static final String FILE = "./data/measurements_small.txt";
 
     private static record Measurement(String station, double value) {
         private Measurement(String[] parts) {
@@ -62,6 +62,8 @@ public class CalculateAverage_baseline {
         // .collect(toMap(e -> e.getKey(), e -> Math.round(e.getValue() * 10.0) / 10.0)));
         // System.out.println(measurements1);
 
+        Long before = System.currentTimeMillis();
+
         Collector<Measurement, MeasurementAggregator, ResultRow> collector = Collector.of(
                 MeasurementAggregator::new,
                 (a, m) -> {
@@ -86,6 +88,10 @@ public class CalculateAverage_baseline {
         Map<String, ResultRow> measurements = new TreeMap<>(Files.lines(Paths.get(FILE))
                 .map(l -> new Measurement(l.split(";")))
                 .collect(groupingBy(m -> m.station(), collector)));
+
+        long after = System.currentTimeMillis();
+        System.out.println(measurements.size());
+        System.out.println("took: " + (after - before));
 
         System.out.println(measurements);
     }
