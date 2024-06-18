@@ -46,7 +46,7 @@ public class CalculateAverage_Rasul3 {
         Map<String, WeatherEntry> allVals = new HashMap<>();
         String city = null;
         String temp = "";
-        LinkedList<Character> chars = new LinkedList<>();
+        List<Character> chars = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             char c = (char) mbb.get();
             if(c == ';') {
@@ -56,20 +56,23 @@ public class CalculateAverage_Rasul3 {
                     charArray[j] = chars.get(j);
                 }
                 city = new String(charArray);
-                chars.clear();
+                chars = new ArrayList<>();
             } else if(c == '\n' ) {
                 char[] charArray = new char[chars.size()];
                 for(int j = 0; j < chars.size(); j++) {
                     charArray[j] = chars.get(j);
                 }
                 temp = new String(charArray);
-                chars.clear();
+                chars = new ArrayList<>();
 
-                if(!allVals.containsKey(city)) {
-                    allVals.put(city, new WeatherEntry());
+                if(temp.length() > 0) {
+                    WeatherEntry entry = allVals.get(city);
+                    if(entry == null) {
+                        entry = new WeatherEntry();
+                        allVals.put(city, entry);
+                    }
+                    entry.addVal(Integer.parseInt(temp));
                 }
-                if(temp.length() > 0)
-                    allVals.get(city).addVal(Integer.parseInt(temp));
             }else {
                 if(c != '.') chars.add(c);
             }
@@ -167,7 +170,7 @@ public class CalculateAverage_Rasul3 {
 
         for(int i = 0; i < futures.size(); i++ ){
             try {
-                System.out.println(futures.get(i).get());
+                futures.get(i).get();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (ExecutionException e) {
@@ -175,16 +178,7 @@ public class CalculateAverage_Rasul3 {
             }
             System.out.println("\nfinished chunk: " + i + "\n\n");
         }
-
-//        futures.forEach(mapFuture -> {
-//            try {
-//
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            } catch (ExecutionException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
+// S>tt536PyUGZzMvP'}an%e
 
         System.out.println("Total time: " + (System.currentTimeMillis() - start));
 
